@@ -395,6 +395,8 @@ var i, t: LongInt;
     sign, hx, hy, tx, ty, sx, sy, hogLR: LongInt;  // hedgehog, crosshair, temp, sprite, direction
     dx, dy, ax, ay, aAngle, dAngle, hAngle, lx, ly: real;  // laser, change
     wraps: LongWord; // numbe of wraps for laser in world wrap
+    dxUp, dyUp, dxDown, dyDown, sineA, HaHoX, HaHoY: real; //used for sinegun laser
+    mX, mY: LongInt; // mouse coordinates
     defaultPos, HatVisible, inWorldBounds: boolean;
     HH: PHedgehog;
     CurWeapon: PAmmo;
@@ -402,6 +404,8 @@ var i, t: LongInt;
     r:TSDL_Rect;
     curhat: PTexture;
 begin
+    HaHoX := hwRound(Gear^.X);
+    HaHoY := hwRound(Gear^.Y);
     HH:= Gear^.Hedgehog;
     CrosshairGear:= nil;
     if HH^.Unplaced then
@@ -457,6 +461,16 @@ begin
             defaultPos:= false;
             HatVisible:= false
             end;
+        mX := CursorPoint.X - WorldDx;
+        mY := cScreenHeight - CursorPoint.Y - WorldDy;
+        if CurrentHedgehog^.CurAmmoType = amNapalm then
+            begin
+            for i := -30 to 30 do
+                begin
+                DrawLine(round(HaHoX + i*100), -500, round(HaHoX+hwRound(cWindSpeed * 1600*10000) + i*100), round(0+10000*0.5), 1.0, $FF, $00, $00, $90);
+                end;
+                DrawTextureRotated(CrosshairTexture, 12, 12, (mX+hwRound(cWindSpeed*3250*(my-(topY-60)))) + WorldDx, mY + WorldDy, 0, sign * (Gear^.Angle * 180.0) / cMaxAngle);
+            end;
 
 
     if HH^.Effects[hePoisoned] <> 0 then
@@ -501,8 +515,6 @@ begin
         if ((Gear^.State and (gstHHThinking or gstAnimation)) = 0) and
 /// If current ammo is active, and current ammo has alt attack and uses a crosshair  (rope, basically, right now, with no crosshair for parachute/saucer
             (((CurAmmoGear <> nil) and
-            // don't render crosshair/laser during kamikaze
-            ((CurAmmoGear^.AmmoType <> amKamikaze) or ((Gear^.State and gstAttacking) = 0)) and
              ((Ammoz[CurAmmoGear^.AmmoType].Ammo.Propz and ammoprop_NoCrossHair) = 0)) or
 /// If no current ammo is active, and the selected ammo uses a crosshair
             ((CurAmmoGear = nil) and ((Ammoz[HH^.CurAmmoType].Ammo.Propz and ammoprop_NoCrosshair) = 0) and ((Gear^.State and gstAttacked) = 0))) then
@@ -515,6 +527,16 @@ begin
     *)
             dx:= hogLR * Sin(Gear^.Angle * pi / cMaxAngle);
             dy:= -Cos(Gear^.Angle * pi / cMaxAngle);
+            sineA:= 0.08;
+
+            dxUp:= hogLR * Sin((Gear^.Angle) * pi / cMaxAngle + sineA);
+            dyUp:= -Cos((Gear^.Angle) * pi / cMaxAngle + sineA);
+
+            dxDown:= hogLR * Sin((Gear^.Angle) * pi / cMaxAngle - sineA);
+            dyDown:= -Cos((Gear^.Angle) * pi / cMaxAngle - sineA);
+
+            cLaserSighting  := true;
+            cLaserSightingSniper  := true;
             if cLaserSighting or cLaserSightingSniper then
                 begin
                 lx:= GetLaunchX(HH^.CurAmmoType, hogLR, Gear^.Angle);
@@ -587,6 +609,11 @@ begin
                     end;
 
                 DrawLineWrapped(hx, hy, tx, ty, 1.0, hogLR < 0, wraps, $FF, $00, $00, $C0);
+                    if CurrentHedgehog^.CurAmmoType = amSineGun then
+                        begin
+                        DrawLine(round(HaHoX), round(HaHoY), round(HaHoX+dxUp*1000), round(HaHoY+dyUp*1000), 1.0, $FF, $00, $00, $90);
+                        DrawLine(round(HaHoX), round(HaHoY), round(HaHoX+dxDown*1000), round(HaHoY+dyDown*1000), 1.0, $FF, $00, $00, $90);
+                        end
                 end;
 
             // calculate crosshair position
@@ -594,6 +621,16 @@ begin
             CrosshairY := Round(hwRound(Gear^.Y) + dy * 80 + GetLaunchY(HH^.CurAmmoType, Gear^.Angle));
             // crosshair will be rendered in RenderHHGuiExtras
             CrosshairGear := Gear;
+
+            if CurrentHedgehog^.CurAmmoType = amKamikaze then
+                begin
+                CrosshairX := Round(hwRound(Gear^.X) + dx * 520);
+                CrosshairY := Round(hwRound(Gear^.Y) + dy * 520);
+                end else
+                begin
+                CrosshairX := Round(hwRound(Gear^.X) + dx * 80 + GetLaunchX(HH^.CurAmmoType, hogLR, Gear^.Angle));
+                CrosshairY := Round(hwRound(Gear^.Y) + dy * 80 + GetLaunchY(HH^.CurAmmoType, Gear^.Angle));
+                end;
             end;
 
         hx:= ox + 8 * sign;
