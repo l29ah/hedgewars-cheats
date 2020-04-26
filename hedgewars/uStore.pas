@@ -172,6 +172,7 @@ end;
 procedure WriteNames(Font: THWFont);
 var t: LongInt;
     i, maxLevel: LongInt;
+    hhNum, k : longint;
     r: TSDL_Rect;
     drY: LongInt;
     texsurf, flagsurf, iconsurf: PSDL_Surface;
@@ -279,6 +280,13 @@ for t:= 0 to Pred(TeamsCount) do
                     if ExtDriven then
                          NameTagTex:= RenderStringTexLim(ansistring(Name), Clan^.Color, fnt16, cTeamHealthWidth)
                     else NameTagTex:= RenderStringTex(ansistring(Name), Clan^.Color, fnt16);
+                    // determining the hedgehog number in the team
+                    hhNum := 0;
+                    for k := 0 to i do
+                        if (Hedgehogs[k].Gear <> nil) and 
+                           (Hedgehogs[i].Team = Hedgehogs[k].Team) 
+                        then inc(hhNum);
+                    NameTagTex:= RenderStringTexLim(IntToStr(hhNum) + ': ' + Name, Clan^.Color, fnt16, cTeamHealthWidth);
                     if cHolidaySilliness then
                         begin
                         // Special hats on special days
@@ -297,7 +305,6 @@ for t:= 0 to Pred(TeamsCount) do
                             Hat := 'fr_tomato'; // avoid promoting violence to hedgehogs. see https://hedgewars.org/node/5818
                             end;
                         end;
-
                     if Hat <> 'NoHat' then
                         begin
                         if (Length(Hat) > 39) and (Copy(Hat,1,8) = 'Reserved') and (Copy(Hat,9,32) = PlayerHash) then
