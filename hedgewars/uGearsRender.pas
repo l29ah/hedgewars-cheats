@@ -565,6 +565,12 @@ begin
                     begin
                     if wraps > cMaxLaserSightWraps then
                         break;
+                    if CurrentHedgehog^.CurAmmoType = amKamikaze then
+                        begin
+                        tx:= round(lx + ax * (max(LAND_WIDTH,4096) div 2));
+                        ty:= round(ly + ay * (max(LAND_WIDTH,4096) div 2));
+                        break;
+                    end;
                     lx:= lx + ax;
                     ly:= ly + ay;
                     tx:= round(lx);
