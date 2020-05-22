@@ -535,9 +535,7 @@ begin
             dxDown:= hogLR * Sin((Gear^.Angle) * pi / cMaxAngle - sineA);
             dyDown:= -Cos((Gear^.Angle) * pi / cMaxAngle - sineA);
 
-            cLaserSighting  := true;
-            cLaserSightingSniper  := true;
-            if cLaserSighting or cLaserSightingSniper then
+            if true then
                 begin
                 lx:= GetLaunchX(HH^.CurAmmoType, hogLR, Gear^.Angle);
                 ly:= GetLaunchY(HH^.CurAmmoType, Gear^.Angle);
