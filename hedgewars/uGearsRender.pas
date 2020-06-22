@@ -613,7 +613,11 @@ begin
                     end;
 
                 DrawLineWrapped(hx, hy, tx, ty, 1.0, hogLR < 0, wraps, $FF, $00, $00, $C0);
-                    if CurrentHedgehog^.CurAmmoType = amSineGun then
+                    if (CurrentHedgehog^.CurAmmoType = amSineGun) or
+                       (CurrentHedgehog^.CurAmmoType = amBallgun) or
+                       (CurrentHedgehog^.CurAmmoType = amFlamethrower) or
+                       (CurrentHedgehog^.CurAmmoType = amLandgun) or
+                       (CurrentHedgehog^.CurAmmoType = amMinigun) then
                         begin
                         DrawLine(round(HaHoX), round(HaHoY), round(HaHoX+dxUp*1000), round(HaHoY+dyUp*1000), 1.0, $FF, $00, $00, $90);
                         DrawLine(round(HaHoX), round(HaHoY), round(HaHoX+dxDown*1000), round(HaHoY+dyDown*1000), 1.0, $FF, $00, $00, $90);
