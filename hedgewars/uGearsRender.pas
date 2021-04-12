@@ -463,6 +463,10 @@ begin
             end;
         mX := CursorPoint.X - WorldDx;
         mY := cScreenHeight - CursorPoint.Y - WorldDy;
+        if (CurrentHedgehog^.CurAmmoType = amBirdy) then
+         begin
+            DrawLine(round(HaHoX), round(HaHoY), round(HaHoX), 0, 1.0, $FF, $00, $00, $90);
+         end;
         if CurrentHedgehog^.CurAmmoType = amNapalm then
             begin
             for i := -30 to 30 do
