@@ -1943,6 +1943,7 @@ var first, count, topy, lx, rx, spriteHeight, spriteWidth, waterSpeed: LongInt;
     lw, nWaves, shift, realHeight: GLfloat;
     sprite: TSprite;
 begin
+exit;
 // note: spriteHeight is the Height of the wave sprite while
 //       cWaveHeight describes how many pixels of it will be above waterline
 
