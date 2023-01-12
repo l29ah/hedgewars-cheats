@@ -1807,11 +1807,13 @@ end;
 
 procedure RenderGearHealth(Gear: PGear; x, y: LongInt);
 begin
-if isShowGearInfo and (Gear^.RenderHealth) and (Gear^.Tex <> nil) then
+if isShowGearInfo and (Gear^.Tex <> nil) then
     begin
     if (Gear^.Kind = gtCase) and ((Gear^.Pos and posCaseHealth) <> 0) then
         DrawTextureCentered(x, y - 38, Gear^.Tex);
     if (Gear^.Kind = gtExplosives) then
+        DrawTextureCentered(x, y - 38, Gear^.Tex);
+    if (Gear^.Kind in [gtBirdy]) then
         DrawTextureCentered(x, y - 38, Gear^.Tex);
     end;
 end;

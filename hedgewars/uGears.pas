@@ -277,6 +277,11 @@ while t <> nil do
             end;
         if curHandledGear^.Active then
             begin
+            if (curHandledGear^.Kind = gtBirdy) then
+                begin
+                FreeAndNilTexture(curHandledGear^.Tex);
+                curHandledGear^.Tex:= RenderStringTex(ansistring(inttostr(curHandledGear^.Health)), $ff808080, fntSmall);
+                end;
             if (not cOnlyStats) and curHandledGear^.RenderTimer then
                 begin
                 // Mine timer

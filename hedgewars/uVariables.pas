@@ -2939,7 +2939,7 @@ begin
     isSpeed         := false;
     isAFK           := false;
     isShowMission   := false;
-    isShowGearInfo  := false;
+    isShowGearInfo  := true;
     isForceMission  := false;
     SpeedStart      := 0;
     fastUntilLag    := false;
