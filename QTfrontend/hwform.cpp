@@ -1798,7 +1798,6 @@ void HWForm::GameStateChanged(GameState gameState)
             demoIsPresent = true;
             Music(false);
             if (wBackground) wBackground->stopAnimation();
-            if (!hwnet || (!hwnet->isRoomChief() || !hwnet->isInRoom())) GoToPage(ID_PAGE_INGAME);
             ui.pageGameStats->clear();
             if (pRegisterServer)
             {
